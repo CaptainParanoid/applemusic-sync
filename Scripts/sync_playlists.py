@@ -2,11 +2,15 @@
 import requests
 import os 
 from dotenv import load_dotenv
+from datetime import datetime
 
 # Load the environmental variables 
 load_dotenv()
 developer_token = os.getenv("DEVELOPER_TOKEN")
 music_user_token = os.getenv("MUSIC_USER_TOKEN")
+
+# Setting up the webhook to get notifications about the changes
+webhook_url = os.getenv("WEBHOOK_URL")
 
 headers = {
     "Authorization": f"Bearer {developer_token}",
@@ -56,20 +60,33 @@ tracks_to_sync = track_ids_playlist_source - track_ids_playlist_destination
 print(f"{len(tracks_to_sync)} tracks to sync.")
 
 # Creating a for loop to add songs that's in tracks_to_sync to destination playlist
+added_logs = []
+failed_logs = []
+
 for track in tracks_source:
     if track['id'] in tracks_to_sync:
         name = track['attributes']['name']
         artist = track['attributes']['artistName']
 
-        response = requests.post(f"https://api.music.apple.com/v1/me/library/playlists/{destination_playlist_id}/tracks", 
+        response = requests.post(f"https://api.music.apple.com/v1/me/library/playlists/{destination_playlist_id}/tracks",
                 headers=headers,
                 json={
                     "data": [{"id": track['id'], "type": "library-songs"}]
                 }
         )
-        
+
         if response.status_code == 204:
-            print(f"Added {name} - {artist} to destination playlist.")
+            added_logs.append(f"Added {name} - {artist} to destination playlist.")
 
         else:
-            print(f"Failed to sync {name} - {artist} - {response.status_code}")
+            failed_logs.append(f"Failed to sync {name} - {artist} - {response.status_code}")
+
+# Get todays date for the logging
+today = datetime.today().strftime('%Y-%m-%d')
+
+summary = "\n".join(added_logs + failed_logs)
+
+# Send a notification to my webhook with its logs
+requests.post(webhook_url,
+    {"content": f"🎵 Hi Tina! Here's your sync summary for {today}:\n\n{summary}",
+})
