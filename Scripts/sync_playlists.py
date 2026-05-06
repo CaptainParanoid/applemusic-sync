@@ -22,17 +22,25 @@ def get_all_tracks(playlist_id, headers):
     tracks = []
     url = f"https://api.music.apple.com/v1/me/library/playlists/{playlist_id}/tracks"
 
+    # Get the readable names for the playlists
+    playlist_url = f"https://api.music.apple.com/v1/me/library/playlists/{playlist_id}"
+    playlist_response = requests.get(playlist_url, headers=headers).json()
+    
+    for playlist in playlist_response['data']:
+        playlist = playlist['attributes']['name']
+
+    
     while url:
         response = requests.get(url, headers=headers).json()
         tracks.extend(response['data'])
 
         next_page = response.get("next")
         url = f"https://api.music.apple.com{next_page}" if next_page else None
-        print(f"Processed {len(tracks)} tracks from {playlist_id}")
+        print(f"Processed {len(tracks)} tracks from {playlist}")
 
     return tracks
 
-# Run the function
+# Run the function to get all the tracks
 tracks_destination = get_all_tracks(destination_playlist_id, headers)
 tracks_source = get_all_tracks(source_playlist_id, headers)
 
