@@ -28,16 +28,17 @@ def get_all_tracks(playlist_id, headers):
 
         next_page = response.get("next")
         url = f"https://api.music.apple.com{next_page}" if next_page else None
-        print(f"Processed {len(tracks)} tracks from .")
+        print(f"Processed {len(tracks)} tracks from {playlist_id}")
 
     return tracks
 
+# Run the function
 tracks_destination = get_all_tracks(destination_playlist_id, headers)
 tracks_source = get_all_tracks(source_playlist_id, headers)
 
 # Create sets to get the track IDs 
-track_ids_playlist_destination = {track['id'] for track in tracks_destination['data']}
-track_ids_playlist_source = {track['id'] for track in tracks_source['data']}
+track_ids_playlist_destination = {track['id'] for track in tracks_destination}
+track_ids_playlist_source = {track['id'] for track in tracks_source}
 
 print(f"Destination playlist: {len(track_ids_playlist_destination)} tracks.")
 print(f"Source playlist: {len(track_ids_playlist_source)} tracks.")
@@ -47,12 +48,10 @@ tracks_to_sync = track_ids_playlist_source - track_ids_playlist_destination
 print(f"{len(tracks_to_sync)} tracks to sync.")
 
 # Creating a for loop to add songs that's in tracks_to_sync to destination playlist
-for track in tracks_source['data']:
+for track in tracks_source:
     if track['id'] in tracks_to_sync:
         name = track['attributes']['name']
         artist = track['attributes']['artistName']
-
-"""
 
         response = requests.post(f"https://api.music.apple.com/v1/me/library/playlists/{destination_playlist_id}/tracks", 
                 headers=headers,
@@ -60,10 +59,9 @@ for track in tracks_source['data']:
                     "data": [{"id": track['id'], "type": "library-songs"}]
                 }
         )
-
+        
         if response.status_code == 204:
             print(f"Added {name} - {artist} to destination playlist.")
 
         else:
             print(f"Failed to sync {name} - {artist} - {response.status_code}")
-"""
