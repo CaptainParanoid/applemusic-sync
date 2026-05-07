@@ -23,7 +23,7 @@ jobs:
         env:
           DEVELOPER_TOKEN: ${{ secrets.DEVELOPER_TOKEN }}
           MUSIC_USER_TOKEN: ${{ secrets.MUSIC_USER_TOKEN }}
-          NUVARANDE_ID: ${{ secrets.NUVARANDE_ID }}
-          OCT2023_ID: ${{ secrets.OCT2023_ID }}
+          DESTINATION_PLAYLIST_ID: ${{ secrets.DESTINATION_PLAYLIST_ID }}
+          SOURCE_PLAYLIST_ID: ${{ secrets.SOURCE_PLAYLIST_ID }}
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
         run: python Scripts/sync_playlists.py
