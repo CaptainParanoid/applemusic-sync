@@ -88,5 +88,5 @@ summary = "\n".join(added_logs + failed_logs)
 
 # Send a notification to my webhook with its logs
 requests.post(webhook_url,
-    {"content": f"🎵 Hi Tina! Here's your sync summary for {today}:\n\n{summary}",
-})
+    data=f"🎵 Apple Music Sync – {today}. {summary}"
+)
