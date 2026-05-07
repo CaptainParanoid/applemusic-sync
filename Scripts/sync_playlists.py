@@ -18,8 +18,8 @@ headers = {
 }
 
 # Get the playlist IDs for each playlist
-destination_playlist_id = os.getenv("NUVARANDE_ID")
-source_playlist_id = os.getenv("OCT2023_ID")
+destination_playlist_id = os.getenv("DESTINATION_PLAYLIST_ID")
+source_playlist_id = os.getenv("SOURCE_PLAYLIST_ID")
 
 def get_all_tracks(playlist_id, headers): 
     """ A function to get all tracks in the playlists, as Apple Music only processes 100 at a time """
