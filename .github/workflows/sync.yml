@@ -1,0 +1,29 @@
+name: Apple Music Sync
+
+on:
+  schedule:
+    - cron: '0 21 * * *' # Runs at 21:00 every day
+  workflow_dispatch:       # Allows manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run sync
+        env:
+          DEVELOPER_TOKEN: ${{ secrets.DEVELOPER_TOKEN }}
+          MUSIC_USER_TOKEN: ${{ secrets.MUSIC_USER_TOKEN }}
+          NUVARANDE_ID: ${{ secrets.NUVARANDE_ID }}
+          OCT2023_ID: ${{ secrets.OCT2023_ID }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+        run: python Scripts/sync_playlists.py
