@@ -2,7 +2,7 @@ name: Apple Music Sync
 
 on:
   schedule:
-    - cron: '0 21 * * *' 
+    - cron: '0 21 * * *' # Runs at 21:00 every day
   workflow_dispatch:       # Allows manual trigger
 
 jobs:
