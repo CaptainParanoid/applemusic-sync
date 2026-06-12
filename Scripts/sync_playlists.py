@@ -87,6 +87,8 @@ today = datetime.today().strftime('%Y-%m-%d')
 summary = "\n".join(added_logs + failed_logs)
 
 # Send a notification to my webhook with its logs
-requests.post(webhook_url,
+if summary:
+    requests.post(webhook_url,
     data=f"🎵 Apple Music Sync – {today}. {summary}"
 )
+    
