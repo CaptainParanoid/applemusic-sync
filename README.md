@@ -29,6 +29,24 @@ npm run build
 
 Output goes to `dist/`. `npm run preview` serves the built app locally.
 
+## Run with Docker (quick local test)
+
+If you'd rather not install Node locally, there's a `Dockerfile` that builds
+the site and serves it as static files (with SPA routing, so `/login`,
+`/game`, `/gift`, etc. all work correctly):
+
+```bash
+docker build -t claudia-birthday-site .
+docker run --rm -p 4173:4173 claudia-birthday-site
+```
+
+Then open <http://localhost:4173>.
+
+Note: this only serves the frontend — it does **not** run the
+`api/send-win-email.js` serverless function (that's Vercel-specific). To
+test that part too, use the [Vercel CLI](https://vercel.com/docs/cli)
+instead: `npx vercel dev`.
+
 ## Deploy
 
 This is set up for [Vercel](https://vercel.com):
